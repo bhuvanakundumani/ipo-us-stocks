@@ -1,35 +1,47 @@
 from sqlalchemy import create_engine
 import pandas as pd
 import datetime
+import re
+import os
+
+
 engine = create_engine('sqlite:///stocks.db', echo=False)
 
 
-def stock_info(symbols):
+def stock_info():
+
+    symbols = get_symbols_ipo()
     big_df = pd.DataFrame()
 
     for symbol in symbols:
         # df = pd.DataFrame(columns=['Date'])
 
-        df = pd.read_csv("stock_data/{}.us.txt".format(symbol), parse_dates=True,
-                          usecols=['Date','Close','Volume'], na_values=['nan'])
-        #    print(" No such file")
+        try:
 
-        df['Date'] = pd.to_datetime(df['Date'])
-        df.rename(columns={"Date":"Date",
-                           "Close":symbol+"Close",
-                           "Volume":symbol+"Volume"}, inplace=True)
+            df = pd.read_csv(
+                            "stock_data/{}.us.txt".format(symbol), parse_dates=True,
+                            usecols=['Date','Close', 'Volume'], na_values=['nan']
+                            )
 
-        start_date = '2013-01-01'
-        end_date = '2018-03-31'
+            df['Date'] = pd.to_datetime(df['Date'])
+            df.rename(columns={"Date":"Date",
+                               "Close":symbol+"Close",
+                               "Volume":symbol+"Volume"}, inplace=True)
 
-        mask =(df['Date'] > start_date) & (df['Date'] <= end_date)
-        df = df.loc[mask]
+            start_date = '2013-01-01'
+            end_date = '2018-03-31'
 
-        df.set_index(['Date'], inplace=True)
+            mask =(df['Date'] > start_date) & (df['Date'] <= end_date)
+            df = df.loc[mask]
 
-        big_df = pd.concat([big_df, df], axis=1)
+            df.set_index(['Date'], inplace=True)
 
-    print(big_df.head())
+            big_df = pd.concat([big_df, df], axis=1)
+
+        except ValueError:
+
+            print("error happened while", symbol)
+
 
     ipo_dict = {}
     list_col = []
@@ -38,8 +50,6 @@ def stock_info(symbols):
     for symbol in symbols:
         column_name = symbol + "Close"
         list_col.append(column_name)
-
-    # print('listcol is',list_col)
 
     for i in list_col:
 
@@ -53,16 +63,14 @@ def stock_info(symbols):
         list_ipo.append(key + 'Close')
         list_ipo.append(key+'Volume')
 
-    # print("ipo columns is", list_ipo)
 
     df_ipo = big_df[list_ipo]
 
     # Creating the table ipo_stocks
 
     create_table(df_ipo)
-
-
-    return ipo_dict
+    sorted_ipo = dict(sorted(ipo_dict.items()))
+    return sorted_ipo
 
 
 def create_table(df):
@@ -86,20 +94,44 @@ def bokeh_plot(name):
     mask = (df1['Date'] > starting_date) & (df1['Date'] <= ending_date)
     df1 = df1.loc[mask]
     '''
-    print(df1.head())
     return df1
 
 
-    
+def get_symbols_ipo():
+
+    list_stocks = []
+    stocks_nasdaq = []
+    path = "stock_data/"
+    for filename in os.listdir(path):
+        ticker_names = re.search(r'(^[a-zA-Z]+)', filename).group(0)
+        list_stocks.append(ticker_names)
+    df_ipo = pd.read_csv("companylist.csv",usecols=["Symbol", "IPOyear"], na_values=['nan'])
+    df_ipo['IPOyear'] = pd.to_datetime(df_ipo['IPOyear'], format='%Y').dt.strftime('%Y')
+
+    start_year = '2013'
+    end_year = '2018'
+
+    mask = (df_ipo['IPOyear'] >= start_year) & (df_ipo['IPOyear'] <= end_year)
+    df = df_ipo.loc[mask]
+
+    dflist = list(df['Symbol'])
+
+    dflist_lowercase = [v.lower() for v in dflist]
+
+    for stock in list_stocks:
+        if stock in dflist_lowercase:
+            stocks_nasdaq.append(stock)
+
+    return stocks_nasdaq
 
 
-#symbols=['zen','SNAP']
-#dict1 = stock_info(symbols)
-# print(dict1)
-# perf_graph()
-# print_table()
-#df_dummy = bokeh_plot('zen')
-#df_dummy = bokeh_plot('SNAP')
+
+
+
+
+
+
+
 
 
 

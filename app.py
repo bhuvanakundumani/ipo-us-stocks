@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request
+# Please download the dataset from https://drive.google.com/drive/folders/12eGZBj1y9oj27ctp79DB0fIhDatbKAi_?usp=sharing
+
+
+
+
+from flask import Flask, render_template
 from stock_analyse import stock_info, bokeh_plot
-import re
 
 from bokeh.embed import components
 from bokeh.models.tools import HoverTool
@@ -14,28 +18,15 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET','POST'])
 def index():
-    ipo_dict ={}
 
-    if request.method == 'POST':
-        text_input = request.form['ticker']
-
-        if text_input != '':
-            # extracted_text = list((text_input.split(',')))
-            list_stocks = list(text_input.split(','))
-            list_stocks = [x.upper() for x in list_stocks]
-            list_without_spaces = [re.sub(r'\s+', '', item) for item in list_stocks]
-            # print('hey list of stocks is', list_without_spaces)
-            ipo_dict = stock_info(list_without_spaces)
-
-            # print(extracted_text)
-            # print(ipo_dict)
+    ipo_dict = stock_info()
 
     return render_template('index.html', ipo_dict=ipo_dict)
 
 
 @app.route("/ipo_detail/<name>", methods =['GET','POST'])
 def ipo_stock_details(name):
-    #graph1_url = perf_graph(name)
+
     df = bokeh_plot(name)
 
     p1 = figure(x_axis_type="datetime", x_axis_label=name + 'Date', y_axis_label=name + 'Price',
@@ -66,13 +57,10 @@ def ipo_stock_details(name):
     script1, div1 = components(p1)
     script2, div2 = components(p2)
 
-    # display the figure
-    #show(p)
-
     return render_template("ipo_detail.html", name=name, div1=div1, script1=script1,
                            div2=div2, script2=script2)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
