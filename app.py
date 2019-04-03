@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Please download the dataset from https://drive.google.com/drive/folders/12eGZBj1y9oj27ctp79DB0fIhDatbKAi_?usp=sharing
-
+# https://pybit.es/deploy-flask-heroku.html (for heroku deployment using gunicorn)
 
 
 

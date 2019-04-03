@@ -120,8 +120,10 @@ def get_symbols_ipo():
     for stock in list_stocks:
         if stock in dflist_lowercase:
             stocks_nasdaq.append(stock)
+    print(len(stocks_nasdaq))
 
-    return stocks_nasdaq
+    return stocks_nasdaq[0:100]
+
 
 
 
