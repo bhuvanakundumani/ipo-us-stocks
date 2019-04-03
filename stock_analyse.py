@@ -122,7 +122,7 @@ def get_symbols_ipo():
             stocks_nasdaq.append(stock)
     print(len(stocks_nasdaq))
 
-    return stocks_nasdaq[0:100]
+    return stocks_nasdaq[0:50]
 
 
 
