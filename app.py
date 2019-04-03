@@ -5,7 +5,7 @@
 
 
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from stock_analyse import stock_info, bokeh_plot
 
 from bokeh.embed import components
@@ -18,8 +18,11 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET','POST'])
 def index():
+    ipo_dict ={}
 
-    ipo_dict = stock_info()
+    if request.method == 'POST':
+
+        ipo_dict = stock_info()
 
     return render_template('index.html', ipo_dict=ipo_dict)
 
@@ -32,8 +35,8 @@ def ipo_stock_details(name):
     p1 = figure(x_axis_type="datetime", x_axis_label=name + 'Date', y_axis_label=name + 'Price',
                 plot_width=600, plot_height=300)
 
-    p2= figure(x_axis_type="datetime", x_axis_label=name + 'Date', y_axis_label=name + 'Volume',
-               plot_width=600, plot_height=300)
+    p2 = figure(x_axis_type="datetime", x_axis_label=name + 'Date', y_axis_label=name + 'Volume',
+                plot_width=600, plot_height=300)
 
     # add hover tools to the figure
     p1.add_tools(HoverTool(

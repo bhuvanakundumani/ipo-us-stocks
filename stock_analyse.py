@@ -42,7 +42,6 @@ def stock_info():
 
             print("error happened while", symbol)
 
-
     ipo_dict = {}
     list_col = []
     list_ipo = []
@@ -105,7 +104,7 @@ def get_symbols_ipo():
     for filename in os.listdir(path):
         ticker_names = re.search(r'(^[a-zA-Z]+)', filename).group(0)
         list_stocks.append(ticker_names)
-    df_ipo = pd.read_csv("companylist.csv",usecols=["Symbol", "IPOyear"], na_values=['nan'])
+    df_ipo = pd.read_csv("companylist.csv", usecols=["Symbol", "IPOyear"], na_values=['nan'])
     df_ipo['IPOyear'] = pd.to_datetime(df_ipo['IPOyear'], format='%Y').dt.strftime('%Y')
 
     start_year = '2013'
