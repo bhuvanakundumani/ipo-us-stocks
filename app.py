@@ -22,7 +22,10 @@ def index():
 
     if request.method == 'POST':
 
-        ipo_dict = stock_info()
+        starting_year = request.form['starting-year']
+        ending_year = request.form['ending-year']
+
+        ipo_dict = stock_info(starting_year, ending_year)
 
     return render_template('index.html', ipo_dict=ipo_dict)
 
@@ -65,5 +68,4 @@ def ipo_stock_details(name):
 
 
 if __name__ == '__main__':
-    app.run()
-
+    app.run(debug=True)

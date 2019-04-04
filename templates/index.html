@@ -11,7 +11,7 @@
 
                 <h1 class="title" align="center">
 
-                    Click on the companies to see their performance since IPO
+                    Choose the year that you want to search from 2008
                 </h1>
         </div>
     </section>
@@ -27,14 +27,25 @@
             <div class="columns">
                 <div class="column is-offset-4 is-4">
 
-                    <h3>Please press Submit to ge the stocks that went public in the last five years</h3>
+                    <h3>Search is from <b> 01 JAN, Starting year </b> to <b>31 DEC, Ending year</b></h3>
                     <br>
-                    <form method="POST">
-                        <div class="field has-addons">
 
-                            <input class="button is-info" type="submit" name="Submit">
-                        </div>
+                    <form method="POST">
+
+
+                    <br>
+                    <input type="text"  cols = "30" name="starting-year" style=" width:100px;" data-toggle="tooltip"
+                           data-placement="top" title="Date format YYYY!" placeholder="Starting year" required>
+                    <input type="text"  cols = "30" name="ending-year" style=" width:100px;" data-toggle="tooltip"
+                           data-placement="top" title="Date format YYYY!" placeholder="Ending year" required>
+                    <br>
+                    <br>
+
+                    <input  class="button is-info"  type="submit" name="Submit">
+
                     </form>
+
+
                 </div>
             </div>
         </div>
@@ -55,7 +66,12 @@
                                 <p>
                                     <span class="title"><a href="{{ url_for('ipo_stock_details', name=key) }}"> {{ key }} </a></span>
                                     <br>
-                                    <span class="subtitle">Started trading on: {{ value }}</span>
+
+                                    <span class="subtitle">{{ value[0] }}</span>
+                                    <br>
+                                    <span class="subtitle">IPO Date: {{ value[1] }}</span>
+                                    <br>
+                                    <span class="subtitle">IPO Price: {{ value[2] }}</span>
 
                                 </p>
                             </div>
