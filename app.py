@@ -23,6 +23,7 @@ def index():
     if request.method == 'POST':
 
         starting_year = request.form['starting-year']
+
         ending_year = request.form['ending-year']
 
         ipo_dict = stock_info(starting_year, ending_year)

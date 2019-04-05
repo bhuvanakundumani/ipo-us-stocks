@@ -47,7 +47,7 @@ def stock_info(starting_year, ending_year):
 
             print("error happened while reading ", symbol)
 
-    # big_df.to_csv('list.csv')
+    big_df.to_csv('list.csv')
     ipo_dict = {}
     list_col = []
     list_ipo = []
@@ -71,7 +71,7 @@ def stock_info(starting_year, ending_year):
                 df_dummy = pd.read_csv("companylist.csv", usecols=["Symbol", "Name"], na_values=['nan'],index_col=0)
                 comp_name_upper = comp_name.upper()
                 print(df_dummy.head())
-                ipo_comp_name = df_dummy.loc[comp_name_upper,'Name']
+                ipo_comp_name = df_dummy.loc[comp_name_upper, 'Name']
                 ipo_dict[comp_name] = [ipo_comp_name, ipo_date.strftime("%Y-%m-%d"), ipo_price]
 
     except AttributeError:
